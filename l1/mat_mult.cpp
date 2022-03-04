@@ -1,16 +1,17 @@
-#include <omp.h>
-#include <iostream>
 #include <assert.h>
+#include <omp.h>
+
+#include <iostream>
 
 #define SIZE 500
 
-using Row = int*;
-using Matrix = Row*;
+using Row = int *;
+using Matrix = Row *;
 
-Matrix generateMatrix(int size, bool empty=false) {
+Matrix generateMatrix(int size, bool empty = false) {
     Matrix result;
     result = new Row[size];
-    
+
     for (int i = 0; i < size; i++) {
         result[i] = new int[size];
         for (int j = 0; j < size; j++) {
@@ -23,8 +24,8 @@ Matrix generateMatrix(int size, bool empty=false) {
 
 Matrix matrixMult(Matrix first, Matrix second, int size) {
     Matrix result = generateMatrix(size, true);
-    double startTime = omp_get_wtime ();
-	
+    double startTime = omp_get_wtime();
+
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             for (int k = 0; k < size; k++) {
@@ -34,8 +35,9 @@ Matrix matrixMult(Matrix first, Matrix second, int size) {
     }
 
     double endTime = omp_get_wtime();
-    std::cout << "Sequential execution time: " <<  endTime - startTime << std::endl;
-    
+    std::cout << "Sequential execution time: " << endTime - startTime
+              << std::endl;
+
     return result;
 }
 
@@ -43,11 +45,20 @@ Matrix matrixMultParallel(Matrix first, Matrix second, int size) {
     Matrix result = generateMatrix(size, true);
     double startTime = omp_get_wtime();
 
-    //PUT IMPLEMENTATION HERE
+#pragma omp parallel for collapse(2)
+    for (int i = 0; i < size; i++) {
+        // #pragma omp parallel for
+        for (int j = 0; j < size; j++) {
+            for (int k = 0; k < size; k++) {
+                result[i][j] += first[i][k] * second[k][j];
+            }
+        }
+    }  // PUT IMPLEMENTATION HERE
 
     double endTime = omp_get_wtime();
-    std::cout << "Parallel execution time: " << endTime - startTime << std::endl;
-    
+    std::cout << "Parallel execution time: " << endTime - startTime
+              << std::endl;
+
     return result;
 }
 
