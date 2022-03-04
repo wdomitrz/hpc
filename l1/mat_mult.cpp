@@ -47,7 +47,6 @@ Matrix matrixMultParallel(Matrix first, Matrix second, int size) {
 
 #pragma omp parallel for collapse(2)
     for (int i = 0; i < size; i++) {
-        // #pragma omp parallel for
         for (int j = 0; j < size; j++) {
             for (int k = 0; k < size; k++) {
                 result[i][j] += first[i][k] * second[k][j];
