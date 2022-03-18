@@ -34,7 +34,7 @@
 ################################################################################
 
 # Location of the CUDA Toolkit
-CUDA_PATH ?= "/usr/local/cuda"
+CUDA_PATH ?= "/usr"
 
 ##############################
 # start deprecated interface #
@@ -153,7 +153,7 @@ NVCC          := $(CUDA_PATH)/bin/nvcc -ccbin $(HOST_COMPILER)
 # internal flags
 NVCCFLAGS   := -m${TARGET_SIZE}
 CCFLAGS     :=
-LDFLAGS     := 
+LDFLAGS     :=
 
 # build flags
 ifeq ($(TARGET_OS),darwin)
@@ -210,7 +210,7 @@ LIBRARIES :=
 ################################################################################
 
 # Gencode arguments
-SMS ?= 30 35 37 50 52 60
+SMS ?= 80
 
 ifeq ($(SMS),)
 $(info >>> WARNING - no SM architectures have been specified - waiving sample <<<)
@@ -237,7 +237,7 @@ endif
 # Target rules
 all: build
 
-build: gpujulia 
+build: gpujulia
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -262,4 +262,3 @@ clean:
 	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/gpujulia
 
 clobber: clean
-
