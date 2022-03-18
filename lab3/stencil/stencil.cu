@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <time.h>
 
-#define RADIUS 3
-#define NUM_ELEMENTS 1000
+#define RADIUS 100
+#define NUM_ELEMENTS 500000
 
 static void handleError(cudaError_t err, const char *file, int line) {
     if (err != cudaSuccess) {
@@ -15,9 +15,11 @@ static void handleError(cudaError_t err, const char *file, int line) {
 __global__ void stencil_1d(int *in, int *out) {
     int i = threadIdx.x + blockIdx.y * gridDim.x;
 
-    out[i] = 0;
-    for (int j = i - RADIUS; j <= i + RADIUS; j++)
-        if (0 <= j && j < NUM_ELEMENTS) out[i] += out[j];
+    if (i < NUM_ELEMENTS) {
+        out[i] = 0;
+        for (int j = i - RADIUS; j <= i + RADIUS; j++)
+            if (0 <= j && j < NUM_ELEMENTS) out[i] += out[j];
+    }
 }
 
 void cpu_stencil_1d(int *in, int *out) {
@@ -30,7 +32,7 @@ void cpu_stencil_1d(int *in, int *out) {
 
 int main() {
     // PUT YOUR CODE HERE - INPUT AND OUTPUT ARRAYS
-    int in[NUM_ELEMENTS], out[NUM_ELEMENTS];
+    int in[NUM_ELEMENTS], out[NUM_ELEMENTS], out2[NUM_ELEMENTS];
     int *inGPU, *outGPU;
 
     cudaEvent_t start, stop;
@@ -46,11 +48,13 @@ int main() {
     cudaMemcpy(inGPU, in, NUM_ELEMENTS * sizeof(int), cudaMemcpyHostToDevice);
 
     // PUT YOUR CODE HERE - KERNEL EXECUTION
+    stencil_1d<<<NUM_ELEMENTS / 256 + 1, 256>>>(inGPU, outGPU);
 
     cudaCheck(cudaPeekAtLastError());
 
     // PUT YOUR CODE HERE - COPY RESULT FROM DEVICE TO HOST
-    cudaMemcpy(out, outGPU, NUM_ELEMENTS * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(out2, outGPU, NUM_ELEMENTS * sizeof(int),
+               cudaMemcpyDeviceToHost);
 
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
@@ -74,5 +78,13 @@ int main() {
                     (cpu_stop.tv_nsec - cpu_start.tv_nsec) / 1e6;
     printf("CPU execution time:  %3.1f ms\n", result);
 
+    // Verify
+    for (int i = 0; i < NUM_ELEMENTS; i++) {
+        if (out[i] != out2[i]) {
+            printf("ERROR\n");
+            return 1;
+        }
+    }
+    printf("OK\n");
     return 0;
 }
