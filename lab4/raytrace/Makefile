@@ -34,7 +34,7 @@
 ################################################################################
 
 # Location of the CUDA Toolkit
-CUDA_PATH ?= "/usr/local/cuda"
+CUDA_PATH ?= "/usr"
 
 ##############################
 # start deprecated interface #
@@ -153,7 +153,7 @@ NVCC          := $(CUDA_PATH)/bin/nvcc -ccbin $(HOST_COMPILER)
 # internal flags
 NVCCFLAGS   := -m${TARGET_SIZE}
 CCFLAGS     :=
-LDFLAGS     := 
+LDFLAGS     :=
 
 # build flags
 ifeq ($(TARGET_OS),darwin)
@@ -237,7 +237,7 @@ endif
 # Target rules
 all: build
 
-build: raytrace 
+build: raytrace
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -262,4 +262,3 @@ clean:
 	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/raytrace
 
 clobber: clean
-

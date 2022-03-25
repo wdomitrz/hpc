@@ -1,5 +1,5 @@
-#include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #define THREADS 256
 #define START 0
@@ -24,6 +24,7 @@ __global__ void sum(int* result) {
     int i = blockDim.x / 2;
     while (i != 0) {
         if (threadIdx.x < i) {
+            __syncthreads();
             partials[threadIdx.x] += partials[threadIdx.x + i];
         }
         i /= 2;
@@ -38,7 +39,7 @@ int main(void) {
     int result;
 
     int* gpu_result;
-    cudaMalloc((void**) &gpu_result, sizeof(int));
+    cudaMalloc((void**)&gpu_result, sizeof(int));
 
     sum<<<1, THREADS>>>(gpu_result);
 
@@ -47,12 +48,12 @@ int main(void) {
     cudaFree(gpu_result);
 
     printf("GPU sum = %d.\n", result);
-    
-    int sum = 0; 
+
+    int sum = 0;
     for (int i = START; i <= END; i++) {
         sum += i;
     }
     printf("CPU sum = %d.\n", sum);
-    
+
     return 0;
 }

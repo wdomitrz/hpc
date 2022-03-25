@@ -34,7 +34,7 @@
 ################################################################################
 
 # Location of the CUDA Toolkit
-CUDA_PATH ?= "/usr/local/cuda"
+CUDA_PATH ?= "/usr"
 
 ##############################
 # start deprecated interface #
@@ -237,7 +237,7 @@ endif
 # Target rules
 all: build
 
-build: textureheat 
+build: textureheat
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -262,4 +262,3 @@ clean:
 	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/textureheat
 
 clobber: clean
-
