@@ -27,10 +27,17 @@ struct Sphere {
     }
 };
 
-__global__ void kernel(Sphere *spheres, unsigned char *bitmap) {
+__global__ void kernel(Sphere *spheresAll, unsigned char *bitmap) {
     int x = threadIdx.x + blockIdx.x * blockDim.x;
     int y = threadIdx.y + blockIdx.y * blockDim.y;
     int offset = x + y * blockDim.x * gridDim.x;
+    int cacheIndex = threadIdx.x;
+    __shared__ Sphere spheres[SPHERES];
+    if (cacheIndex == 0) {
+        for (int i = 0; i < SPHERES; i++) {
+            spheres[i] = spheresAll[i];
+        }
+    }
 
     float bitmapX = (x - DIM / 2);
     float bitmapY = (y - DIM / 2);
