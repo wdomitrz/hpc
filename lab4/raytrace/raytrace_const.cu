@@ -120,7 +120,7 @@ int main(void) {
     HANDLE_ERROR(cudaMemcpy(bitmap.get_ptr(), devBitmap, bitmap.image_size(),
                             cudaMemcpyDeviceToHost));
 
-    // bitmap.dump_ppm("image.ppm");
+    bitmap.dump_ppm("image.ppm");
 
     cudaFree(devBitmap);
 }

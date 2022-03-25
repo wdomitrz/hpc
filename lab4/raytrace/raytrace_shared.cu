@@ -38,6 +38,7 @@ __global__ void kernel(Sphere *spheresAll, unsigned char *bitmap) {
             spheres[i] = spheresAll[i];
         }
     }
+    __syncthreads();
 
     float bitmapX = (x - DIM / 2);
     float bitmapY = (y - DIM / 2);
@@ -115,7 +116,7 @@ int main(void) {
     HANDLE_ERROR(cudaMemcpy(bitmap.get_ptr(), devBitmap, bitmap.image_size(),
                             cudaMemcpyDeviceToHost));
 
-    // bitmap.dump_ppm("image.ppm");
+    bitmap.dump_ppm("image.ppm");
 
     cudaFree(devBitmap);
     cudaFree(devSpheres);
