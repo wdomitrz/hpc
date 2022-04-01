@@ -31,20 +31,23 @@ __global__ void kernel(Sphere *spheresAll, unsigned char *bitmap) {
     int x = threadIdx.x + blockIdx.x * blockDim.x;
     int y = threadIdx.y + blockIdx.y * blockDim.y;
     int offset = x + y * blockDim.x * gridDim.x;
-    int cacheIndex = threadIdx.x;
-    __shared__ Sphere spheres[SPHERES];
-    if (cacheIndex == 0) {
-        for (int i = 0; i < SPHERES; i++) {
-            spheres[i] = spheresAll[i];
-        }
-    }
-    __syncthreads();
 
     float bitmapX = (x - DIM / 2);
     float bitmapY = (y - DIM / 2);
 
     float red = 0, green = 0, blue = 0;
     float maxDepth = -INF;
+
+    __shared__ Sphere spheres[SPHERES];
+
+    int for_one = blockDim.x * blockDim.y;
+    int from = for_one * (threadIdx.x + blockDim.x * threadIdx.y);
+    int up_to = min(from + for_one, SPHERES);
+
+    for (int i = from; i < up_to; i++) {
+        spheres[i] = spheresAll[i];
+    }
+    __syncthreads();
 
     for (int i = 0; i < SPHERES; i++) {
         float colorFalloff;
