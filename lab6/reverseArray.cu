@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #define THREADS_PER_BLOCK 768
-#define ARRAY_SIZE THREADS_PER_BLOCK * 1024
+#define ARRAY_SIZE THREADS_PER_BLOCK * 1024 * 512
 
 static void HandleError(cudaError_t error, const char *file, int line) {
     if (error != cudaSuccess) {
