@@ -16,8 +16,8 @@ static void HandleError(cudaError_t error, const char *file, int line) {
 __global__ void reverseArray(int *inArray, int *outArray) {
     int inOffset = blockDim.x * blockIdx.x;
     int outOffset = blockDim.x * (gridDim.x - 1 - blockIdx.x);
-    int inIndex = inOffset + blockIdx.x;
-    int outIndex = outOffset + (blockDim.x - 1 - blockIdx.x);
+    int inIndex = inOffset + threadIdx.x;
+    int outIndex = outOffset + (blockDim.x - 1 - threadIdx.x);
     outArray[outIndex] = inArray[inIndex];
 }
 
