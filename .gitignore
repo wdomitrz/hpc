@@ -1,5 +1,1 @@
-*
-!**.cu
-!**Makefile
-!**makefile
-!**.c
+*.o
