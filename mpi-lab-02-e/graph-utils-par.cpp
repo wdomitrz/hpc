@@ -12,9 +12,6 @@
 #include "graph-base.h"
 #include "graph-utils.h"
 
-#define getMyFirstRow(myRank) \
-    getFirstGraphRowOfProcess(graph->numVertices, numProcesses, myRank)
-
 void catch_error(int res) {
     if (res != 0) {
         printf("Error: %d\n", res);

@@ -9,6 +9,9 @@
 
 #include "graph-base.h"
 
+#define getMyFirstRow(myRank) \
+    getFirstGraphRowOfProcess(graph->numVertices, numProcesses, myRank)
+
 /**
  * Creates a graph with a given number of
  * vertices distributing it among a given
