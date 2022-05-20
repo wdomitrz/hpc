@@ -20,4 +20,7 @@ target_link_libraries(tasks-fib tbb_debug)
 add_executable(nqueens nqueens.cpp)
 target_link_libraries(nqueens tbb_debug)
 
+add_executable(par-nqueens par-nqueens.cpp)
+target_link_libraries(par-nqueens tbb_debug)
+
 install(TARGETS DESTINATION .)
