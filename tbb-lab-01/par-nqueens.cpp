@@ -60,7 +60,7 @@ void recursive_solve(Board& partial_board, int col,
     int b_size = partial_board.size();
     if (col == b_size) {
         solutions.push(partial_board);
-    } else if (col >= 3) {
+    } else if (col > 3) {
         for (int tested_row = 0; tested_row < b_size; tested_row++) {
             partial_board[col] = tested_row;
             if (check_col(partial_board, col))
